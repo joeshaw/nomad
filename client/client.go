@@ -12,6 +12,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/hashicorp/consul/lib"
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/nomad/client/allocdir"
 	"github.com/hashicorp/nomad/client/config"
@@ -783,7 +784,7 @@ func (c *Client) retryIntv(base time.Duration) time.Duration {
 	if c.config.DevMode {
 		return devModeRetryIntv
 	}
-	return base + randomStagger(base)
+	return base + lib.RandomStagger(base)
 }
 
 // registerAndHeartbeat is a long lived goroutine used to register the client
@@ -802,7 +803,7 @@ func (c *Client) registerAndHeartbeat() {
 	if c.config.DevMode {
 		heartbeat = time.After(0)
 	} else {
-		heartbeat = time.After(randomStagger(initialHeartbeatStagger))
+		heartbeat = time.After(lib.RandomStagger(initialHeartbeatStagger))
 	}
 
 	for {
